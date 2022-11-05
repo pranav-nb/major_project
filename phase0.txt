@@ -1,0 +1,24 @@
+Problem Formulation:
+RISC-V (pronounced “risk-five”) is a new instruction-set architecture (ISA) that was originally designed to support computer architecture research and education. 
+However in recent times it has become a standard-free and open architecture for industry applications. 
+This project aims to implement a RISC-V processor in Verilog HDL with test codes in Assembly language. 
+The proper functioning of the design is proposed to be verified using Nexys A7 FPGA board from Xilinx. 
+
+
+Project Objective and Scope:
+The primary objective of this project is to implement a processor that supports the Base Integer Instruction Set in accordance to the specifications of RISC-V Instruction Set Manual –Volume I: Unprivileged ISA.
+Other objective is to imporve the speed of operation of the processor by bringing in Pipelines and avoid hazards during its operation. 
+
+With the advent of open source, this project has immense scope in understanding concepts of processor design, computer architecture, Assembly programming and HDL coding.
+some meaningful words from https://www.linkedin.com/feed/update/urn:li:activity:6992465781548584960?updateEntityUrn=urn%3Ali%3Afs_feedUpdate%3A%28V2%2Curn%3Ali%3Aactivity%3A6992465781548584960%29
+
+Roadmap Nodona
+
+Expected result: The designed processor is expected to show the effects of pipeling and avoid any data or control hazards. 
+
+References : 1. https://riscv.org/
+             2. https://github.com/riscv/riscv-isa-manual/releases/download/Ratified-IMAFDQC/riscv-spec-20191213.pdf
+             3. Computer Organisation and Design The Hardware/Software Interface: RISC-V edition by David A. Patterson and John L. Hennessy
+             4. A. Raveendran, V. B. Patil, D. Selvakumar and V. Desalphine, "A RISC-V instruction set processor-micro-architecture design and analysis," 2016 International Conference on VLSI Systems, Architectures, Technology and Applications (VLSI-SATA), 2016, pp. 1-7, doi: 10.1109/VLSI-SATA.2016.7593047.
+             5. M. Gschwind, V. Salapura and D. Maurer, "FPGA prototyping of a RISC processor core for embedded applications," in IEEE Transactions on Very Large Scale Integration (VLSI) Systems, vol. 9, no. 2, pp. 241-250, April 2001, doi: 10.1109/92.924027.
+             6. W. Zhang, Y. Zhang and K. Zhao, "Design and Verification of Three-stage Pipeline CPU Based on RISC-V Architecture," 2021 5th Asian Conference on Artificial Intelligence Technology (ACAIT), 2021, pp. 697-703, doi: 10.1109/ACAIT53529.2021.9731161.
