@@ -1,8 +1,6 @@
 Problem Formulation:
-RISC-V (pronounced “risk-five”) is a new instruction-set architecture (ISA) that was originally designed to support computer architecture research and education. 
-However in recent times it has become a standard-free and open architecture for industry applications. 
-This project aims to implement a RISC-V processor in Verilog HDL with test codes in Assembly language. 
-The proper functioning of the design is proposed to be verified using Nexys A7 FPGA board from Xilinx. 
+RISC-V (pronounced “risk-five”) is a new instruction-set architecture (ISA) that was originally designed to support computer architecture research and education.  This ISA was originally conceived at University of California, Berkeley. There are different versions of the ISA supporting 32-bit, 64-bit and 128-bit architectures. RISC-V supports a number of core instructions and any additional features or instructions can be implemented as needed, thanks to its open source nature. In recent times, this has become a standard-free and open architecture for insudtrial applications. 
+This project aims to implement a 32bit five stage pipelined RISC-V processor core. The RTL design is planned to be done in Verilog HDL. The verification programs is to be written in assembly language. The design is tested on Nexys A7 FPGA board. 
 
 
 Project Objective and Scope:
