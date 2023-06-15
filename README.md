@@ -1,2 +1,3 @@
 # major_project
-Repo for RISCV project 
+DCT Implementation
+
