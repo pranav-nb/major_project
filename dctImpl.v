@@ -1,24 +1,3 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 03.11.2018 21:47:51
-// Design Name: 
-// Module Name: dct_seq
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
 module dct_seq(clk,btnC,btnU,btnL,btnR,btnD,sw,led,seg,an,dp );
             //Clock    
     	        input clk; //100 MHz
@@ -439,12 +418,12 @@ end
 
 assign led[15] = blink&(sign);  //THE LEFTMOST LED BLINKS AT 1Hz FREQUENCY WHEN NEGATIVE OUTPUT IS DISPLAYED
 
-seg7decimal2 u7 (
+seg7decimal u7 (
 .B(x),
 .clk(clk),
 .clr(btnC),
 .dec(dec),
-.a_to_g(seg),
+.seg(seg),
 .an(an),
 .dp(dp)
 );
@@ -452,51 +431,92 @@ seg7decimal2 u7 (
 endmodule
 
 
-module seg7decimal2 (
-  input wire B,
-  input wire clk,
-  input wire clr,
-  input wire dec,
-  output wire [6:0] a_to_g,
-  output wire [3:0] an,
-  output wire dp
-);
-  reg [6:0] segment_data;
-  reg [3:0] an_data;
-  reg dp_data;
+module seg7decimal(
 
-  always @(posedge clk) begin
-    if (clr) begin
-      segment_data <= 7'b0000000;
-      an_data <= 4'b1111;
-      dp_data <= 1'b0;
-    end else begin
-      case (B)
-        4'b0000: segment_data <= 7'b1000000; // Digit 0
-        4'b0001: segment_data <= 7'b1111001; // Digit 1
-        4'b0010: segment_data <= 7'b0100100; // Digit 2
-        4'b0011: segment_data <= 7'b0110000; // Digit 3
-        4'b0100: segment_data <= 7'b0011001; // Digit 4
-        4'b0101: segment_data <= 7'b0010010; // Digit 5
-        4'b0110: segment_data <= 7'b0000010; // Digit 6
-        4'b0111: segment_data <= 7'b1111000; // Digit 7
-        4'b1000: segment_data <= 7'b0000000; // Digit 8 (Blank)
-        4'b1001: segment_data <= 7'b0010000; // Digit 9
-        default: segment_data <= 7'b0000000; // Blank for invalid input
-      endcase
+	input [31:0] B,
+    input clk,
+    input wire clr,
+    input wire dec,
+    output reg [6:0] seg,
+    output reg [7:0] an,
+    output wire dp 
+	 );
+	 
+	 
+wire [2:0] s;	 
+reg [3:0] digit;
+wire [7:0] aen;
+reg [19:0] clkdiv;
 
-      if (dec) begin
-        segment_data <= segment_data | 7'b1000000; // Turn on decimal point
-      end
+assign dp = 1;
+assign s = clkdiv[19:17];
+assign aen = 8'b11111111; // all turned off initially
 
-      // Rotate display
-      an_data <= {an_data[2:0], an_data[3]};
-      dp_data <= ~dp_data;
-    end
-  end
+// quad 4to1 MUX.
 
-  assign a_to_g = segment_data;
-  assign an = an_data;
-  assign dp = dp_data;
+
+always @(posedge clk)// or posedge clr)
+	
+	case(s)
+	0:digit = B[3:0]; // s is 00 -->0 ;  digit gets assigned 4 bit value assigned to x[3:0]
+	1:digit = B[7:4]; // s is 01 -->1 ;  digit gets assigned 4 bit value assigned to x[7:4]
+	2:digit = B[11:8]; // s is 10 -->2 ;  digit gets assigned 4 bit value assigned to x[11:8
+	3:digit = B[15:12]; // s is 11 -->3 ;  digit gets assigned 4 bit value assigned to x[15:12]
+	4:digit = B[19:16]; // s is 00 -->0 ;  digit gets assigned 4 bit value assigned to x[3:0]
+    5:digit = B[23:20]; // s is 01 -->1 ;  digit gets assigned 4 bit value assigned to x[7:4]
+    6:digit = B[27:24]; // s is 10 -->2 ;  digit gets assigned 4 bit value assigned to x[11:8
+    7:digit = B[31:28]; // s is 11 -->3 ;  digit gets assigned 4 bit value assigned to x[15:12]
+
+	default:digit = B[3:0];
+	
+	endcase
+	
+	//decoder or truth-table for 7seg display values
+	always @(*)
+
+case(digit)
+
+
+//////////<---MSB-LSB<---
+//////////////gfedcba////////////////////////////////////////////           a
+0:seg = 7'b1000000;////0000												   __					
+1:seg = 7'b1111001;////0001												f/	  /b
+2:seg = 7'b0100100;////0010												  g
+//                                                                       __	
+3:seg = 7'b0110000;////0011										 	 e /   /c
+4:seg = 7'b0011001;////0100										       __
+5:seg = 7'b0010010;////0101                                            d  
+6:seg = 7'b0000010;////0110
+7:seg = 7'b1111000;////0111
+8:seg = 7'b0000000;////1000
+9:seg = 7'b0010000;////1001
+'hA:seg = 7'b0001000; 
+'hB:seg = 7'b0000011; 
+'hC:seg = 7'b1000110;
+'hD:seg = 7'b0100001;
+'hE:seg = 7'b0000110;
+'hF:seg = 7'b0001110;
+
+default: seg = 7'b0000000; // U
+
+endcase
+
+
+always @(*)begin
+an=8'b11111111;
+if(aen[s] == 1)
+an[s] = 0;
+end
+
+
+//clkdiv
+
+always @(posedge clk or posedge clr) begin
+if ( clr == 1)
+clkdiv <= 0;
+else
+clkdiv <= clkdiv+1;
+end
+
 
 endmodule
