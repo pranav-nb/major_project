@@ -1,5 +1,0 @@
-1. Develop a single cycle RISC-V implementation
-2. Write verilog for each component individually
-3. Write top file 
-4. Write asm for testing
-5. Try to implement five stage pipeline
